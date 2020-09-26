@@ -6,7 +6,7 @@ public class Logarithm extends UnaryOperation {
 
     public Logarithm(double base) {
         this.base = base;
-        setName("Logarithm on base " + base);
+        setName("Logarithm" + base);
     }
 
     public double getBase() {
@@ -15,7 +15,7 @@ public class Logarithm extends UnaryOperation {
 
     public void setBase(double base) {
         this.base = base;
-        setName("Logarithm on base " + base);
+        setName("Logarithm" + base);
     }
 
     @Override

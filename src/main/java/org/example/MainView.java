@@ -1,5 +1,6 @@
 package org.example;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Anchor;
@@ -18,6 +19,7 @@ import org.example.calculation.operation.Logarithm;
 import org.example.calculation.operation.Square;
 import org.example.calculation.operation.SquareRoot;
 import org.example.calculation.operation.UnaryOperation;
+
 import javax.management.Notification;
 import java.io.*;
 import java.math.BigDecimal;
@@ -28,6 +30,8 @@ public class MainView extends VerticalLayout {
     private Calculator calculator;
     private BigDecimalField inputField;
     private ComboBox<UnaryOperation> operationSelect;
+    private double inputDouble;
+    private Anchor download = new Anchor( );
 
     public MainView() {
         initOperations();
@@ -36,6 +40,10 @@ public class MainView extends VerticalLayout {
         inputField.setLabel("Input");
         inputField.setClearButtonVisible(true);
         inputField.setValue(new BigDecimal(0));
+        inputField.addValueChangeListener(event -> {
+            inputDouble = inputField.getValue().doubleValue();
+            download.setHref(getStreamResource("output.txt",createFileContent()));
+        });
 
         TextField outputField = new TextField("Output");
         outputField.setReadOnly(true);
@@ -46,17 +54,19 @@ public class MainView extends VerticalLayout {
         operationSelect.setValue(calculator.getCurOperation());
         operationSelect.addValueChangeListener(event -> {
             calculator.setCurrentOperation(operationSelect.getValue());
+            download.setHref(getStreamResource("output.txt",createFileContent()));
         });
 
 
         Button calculateButton = new Button("Calculate", buttonClickEvent -> {
-            outputField.setValue(String.valueOf(calculator.calculate(inputField.getValue().doubleValue())));
+            outputField.setValue(String.valueOf(calculator.calculate(inputDouble)));
         });
 
-        Anchor anchor = new Anchor(getStreamResource("output.txt", createFileContent()), "");
-        anchor.getElement().setAttribute("download", true);
-        anchor.setTarget("_blank");
-        anchor.add(new Button("Save"));
+
+        download.getElement().setAttribute("download", true);
+        download.setTarget("_blank");
+        download.add(new Button("Save"));
+
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
         upload.addFinishedListener(event -> {
@@ -73,7 +83,8 @@ public class MainView extends VerticalLayout {
         add(operationSelect);
         add(calculateButton);
         add(outputField);
-        add(anchor);
+        add(download);
+        add(new Button("1",buttonClickEvent -> {outputField.setValue(createFileContent());}));
     }
 
     private void initOperations() {
@@ -87,11 +98,11 @@ public class MainView extends VerticalLayout {
     }
 
     private String createFileContent() {
-        return inputField.getValue().doubleValue() + " " + operationSelect.getValue().toString();
+        return inputDouble + " " + calculator.getCurOperation().toString();
     }
 
     private StreamResource getStreamResource(String fileName, String content) {
-        return new StreamResource("output.txt", () -> new ByteArrayInputStream(content.getBytes()));
+        return new StreamResource(fileName, () -> new ByteArrayInputStream(content.getBytes()));
     }
 
     private void readInput(InputStream stream) throws IOException {
