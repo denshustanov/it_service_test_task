@@ -1,0 +1,14 @@
+{
+  "productionMode": false,
+  "useDeprecatedV14Bootstrapping": false,
+  "eagerServerLoad": false,
+  "npmFolder": "/home/deniel/IdeaProjects/it-service_test-task",
+  "generatedFolder": "/home/deniel/IdeaProjects/it-service_test-task/target/frontend",
+  "frontendFolder": "/home/deniel/IdeaProjects/it-service_test-task/frontend",
+  "connect.javaSourceFolder": "/home/deniel/IdeaProjects/it-service_test-task/src/main/java",
+  "connect.applicationProperties": "/home/deniel/IdeaProjects/it-service_test-task/src/main/resources/application.properties",
+  "connect.openApiFile": "/home/deniel/IdeaProjects/it-service_test-task/target/generated-resources/openapi.json",
+  "connect.generated": "/home/deniel/IdeaProjects/it-service_test-task/frontend/generated",
+  "pnpm.enable": true,
+  "require.home.node": false
+}
