@@ -1,12 +1,9 @@
 package org.example;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -20,7 +17,6 @@ import org.example.calculation.operation.Square;
 import org.example.calculation.operation.SquareRoot;
 import org.example.calculation.operation.UnaryOperation;
 
-import javax.management.Notification;
 import java.io.*;
 import java.math.BigDecimal;
 
@@ -115,8 +111,8 @@ public class MainView extends VerticalLayout {
         for (UnaryOperation operation : calculator.getOperations()) {
             if (operation.toString().equals(splitedLine[1])) {
                 operationSelect.setValue(operation);
+                return;
             }
-            return;
         }
     }
 }
