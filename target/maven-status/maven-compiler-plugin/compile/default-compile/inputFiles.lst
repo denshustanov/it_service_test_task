@@ -1,6 +1,4 @@
-/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/calculation/Calculator.java
-/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/calculation/operation/Square.java
-/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/calculation/operation/Logarithm.java
+/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/tasks/Task.java
+/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/tasks/SubstringFinderTask.java
+/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/tasks/ExpandedFormTask.java
 /home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/MainView.java
-/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/calculation/operation/SquareRoot.java
-/home/deniel/IdeaProjects/it-service_test-task/src/main/java/org/example/calculation/operation/UnaryOperation.java

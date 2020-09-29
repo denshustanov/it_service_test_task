@@ -1,6 +1,4 @@
-org/example/calculation/operation/Logarithm.class
 org/example/MainView.class
-org/example/calculation/Calculator.class
-org/example/calculation/operation/Square.class
-org/example/calculation/operation/UnaryOperation.class
-org/example/calculation/operation/SquareRoot.class
+org/example/tasks/SubstringFinderTask.class
+org/example/tasks/ExpandedFormTask.class
+org/example/tasks/Task.class
