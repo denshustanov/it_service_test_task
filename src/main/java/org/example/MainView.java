@@ -4,60 +4,44 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.StreamResource;
-import org.example.calculation.Calculator;
-import org.example.calculation.operation.Logarithm;
-import org.example.calculation.operation.Square;
-import org.example.calculation.operation.SquareRoot;
-import org.example.calculation.operation.UnaryOperation;
+import org.example.tasks.ExpandedFormTask;
+import org.example.tasks.SubstringFinderTask;
+import org.example.tasks.Task;
 
 import java.io.*;
-import java.math.BigDecimal;
+import java.util.LinkedList;
 
 @Route
 @PWA(name = "IT-Service test task", shortName = "Test task")
 public class MainView extends VerticalLayout {
-    private Calculator calculator;
-    private BigDecimalField inputField;
-    private ComboBox<UnaryOperation> operationSelect;
-    private double inputDouble;
-    private Anchor download = new Anchor( );
+    private TextField inputField;
+    private ComboBox<Task> taskSelect;
+    private Anchor download = new Anchor();
+    private LinkedList<Task> tasks = new LinkedList<>();
 
     public MainView() {
-        initOperations();
+        initTasks();
 
-        inputField = new BigDecimalField();
-        inputField.setLabel("Input");
-        inputField.setClearButtonVisible(true);
-        inputField.setValue(new BigDecimal(0));
-        inputField.addValueChangeListener(event -> {
-            inputDouble = inputField.getValue().doubleValue();
-            download.setHref(getStreamResource("output.txt",createFileContent()));
-        });
+        inputField = new TextField("Input");
 
         TextField outputField = new TextField("Output");
         outputField.setReadOnly(true);
 
-        operationSelect = new ComboBox<>();
-        operationSelect.setItems(calculator.getOperations());
-        operationSelect.setLabel("Select Operation");
-        operationSelect.setValue(calculator.getCurOperation());
-        operationSelect.addValueChangeListener(event -> {
-            calculator.setCurrentOperation(operationSelect.getValue());
-            download.setHref(getStreamResource("output.txt",createFileContent()));
+        taskSelect = new ComboBox<>("Select Operation");
+        SubstringFinderTask substringFinderTask = new SubstringFinderTask();
+        ExpandedFormTask expandedFormTask = new ExpandedFormTask();
+        taskSelect.setItems(substringFinderTask, expandedFormTask);
+        taskSelect.setValue(substringFinderTask);
+
+        Button getResultButton = new Button("Result", buttonClickEvent -> {
+            outputField.setValue(taskSelect.getValue().doTask(inputField.getValue()));
         });
-
-
-        Button calculateButton = new Button("Calculate", buttonClickEvent -> {
-            outputField.setValue(String.valueOf(calculator.calculate(inputDouble)));
-        });
-
 
         download.getElement().setAttribute("download", true);
         download.setTarget("_blank");
@@ -76,25 +60,21 @@ public class MainView extends VerticalLayout {
         });
         add(upload);
         add(inputField);
-        add(operationSelect);
-        add(calculateButton);
+        add(taskSelect);
+        add(getResultButton);
         add(outputField);
         add(download);
-        add(new Button("1",buttonClickEvent -> {outputField.setValue(createFileContent());}));
     }
 
-    private void initOperations() {
-        calculator = new Calculator();
-
-        calculator.addOperation(new Square());
-        calculator.addOperation(new SquareRoot());
-        calculator.addOperation(new Logarithm(2));
-
-        calculator.setCurrentOperation(calculator.getOperations().get(0));
+    private void initTasks() {
+        tasks.add(new SubstringFinderTask());
+        tasks.add(new ExpandedFormTask());
+        taskSelect.setItems(tasks);
+        taskSelect.setValue(tasks.get(0));
     }
 
     private String createFileContent() {
-        return inputDouble + " " + calculator.getCurOperation().toString();
+        return inputField.getValue() + " " + taskSelect.getValue().toString();
     }
 
     private StreamResource getStreamResource(String fileName, String content) {
@@ -104,13 +84,16 @@ public class MainView extends VerticalLayout {
     private void readInput(InputStream stream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line = reader.readLine();
+        int lastSpaceIndex = line.lastIndexOf(' ');
+        String inputString = line.substring(0, lastSpaceIndex);
+        String taskString = line.substring(lastSpaceIndex);
         String[] splitedLine = line.split("\\s+");
 
         double inputNumber = Double.parseDouble(splitedLine[0]);
-        inputField.setValue(new BigDecimal(inputNumber));
-        for (UnaryOperation operation : calculator.getOperations()) {
-            if (operation.toString().equals(splitedLine[1])) {
-                operationSelect.setValue(operation);
+        inputField.setValue(inputString);
+        for (Task task : tasks) {
+            if (task.toString().equals(taskString)) {
+                taskSelect.setValue(task);
                 return;
             }
         }
